@@ -1,0 +1,22 @@
+<Schema>
+<Namespace Name="TypeLib">
+
+<DataType  Name="Int32" IncludeFile="TypeLib/Int32.h"/>
+
+</Namespace>
+
+<Namespace Name="F::D::S">
+
+<Field Name="ABC" Tag="1234" DataType="TypeLib::Int32"/>
+
+<Enum Name="Dummy" Storage = "char">
+ <Item Name="Empty" Value ="-1"/>
+ <Item Name="True"  Value ="1"/>
+ <Item Name="False" Value ="0"/>
+</Enum>
+
+<Field Name="Dummy" Tag="12345" DataType="Dummy"/>
+
+</Namespace>
+
+</Schema>

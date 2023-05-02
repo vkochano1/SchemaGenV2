@@ -1,0 +1,62 @@
+[[[cog 
+
+renderer.gen_includes(cog)
+
+mapping = {
+    'namespace' : field.namespace.get_name(),
+    'name' : field.get_name(),
+    'data_type_name' : field.get_data_type().get_class_name(),
+    'units' : field.get_units(),
+    'tag' : field.get_tag()
+}
+
+data = """
+namespace {namespace}
+{{
+    class {name} : private {data_type_name}
+    {{
+        public:
+        using value_type = {data_type_name};
+        using name_t = TYPE_STRING("{name}");
+        using unit_t = TYPE_STRING("{units}");
+    
+        static consteval std::uint32_t tag()
+        {{
+            return {tag};
+        }}
+
+        static consteval std::string_view name()
+        {{
+            return name_t::value();
+        }}
+
+        using value_type::value_type;
+    
+        constexpr {name} (const {name}&) = default;
+    
+        template< TypeLib::TypeConcepts::simple_field Arg>
+        requires (std::same_as<{name}::unit_t, typename Arg::unit_t>&& std::constructible_from< {name}::value_type, typename Arg::value_type>)
+        constexpr {name} (Arg&& arg) : value_type(arg.value())
+        {{
+        }}
+    
+        using value_type::clear;
+        using value_type::empty;
+        using value_type::toString;
+        using value_type::fromString;
+    
+        value_type& value()
+        {{
+            return *this;
+        }}
+        const value_type& value() const
+        {{
+            return *this;
+        }}
+    }};
+}}
+""".format (**mapping)
+cog.outl(data)
+]]]
+[[[end]]]
+
